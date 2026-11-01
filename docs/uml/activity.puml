@@ -1,0 +1,86 @@
+@startuml
+title COLORS Lab - Login and authenticated database operations
+skinparam shadowing false
+
+start
+partition "Browser (index.html / js/code.js)" {
+  :Enter login and password;
+  :Send JSON login request;
+}
+partition "PHP (api/login.php)" {
+  :Read JSON and require nonempty\nlogin and password;
+  if (Valid request?) then (yes)
+  else (no)
+    :Return HTTP 400 JSON error;
+    stop
+  endif
+  :Connect to MySQL using getConnection();
+  if (Connection available?) then (yes)
+  else (no)
+    :Return HTTP 500 JSON error;
+    stop
+  endif
+  :SELECT user by Login with prepared statement;
+  if (User found and password_verify succeeds?) then (yes)
+    :Generate random token and\none-hour expiration;
+    :INSERT session into Sessions;
+    :Return id, names, token and expiresAt;
+  else (no)
+    :Return HTTP 401 JSON error;
+    stop
+  endif
+}
+partition "Browser (js/code.js / color.html)" {
+  :Save identity and token in\ncookie with 20-minute expiration;
+  :Redirect to color page and read cookie;
+}
+
+repeat
+  partition "Browser" {
+    :Choose add, search, or logout;
+  }
+  if (Logout?) then (yes)
+    partition "Browser" {
+      :Clear local identity and token;
+      :Expire cookie and redirect to index.html;
+    }
+    note right: MySQL session remains until its expiration.
+    stop
+  else (no)
+    partition "Browser" {
+      :Send token, userId and color or search as JSON;
+    }
+    partition "PHP (add_color.php / search_colors.php)" {
+      :Connect to MySQL;
+      if (Connection available?) then (yes)
+      else (no)
+        :Return JSON connection error;
+        stop
+      endif
+      :resolveSessionUserId():\nSELECT session by token;
+      if (Session exists and has not expired?) then (yes)
+        :Use session UserID; ignore supplied userId;
+      else (no)
+        :Return HTTP 401 JSON error;
+        stop
+      endif
+      if (Add request?) then (yes)
+        :Prepared INSERT into Colors (UserID, Name);
+        :Return JSON with empty error;
+      else (search)
+        :Escape LIKE wildcards in search text;
+        :Prepared SELECT Name from Colors\nusing case-insensitive substring and UserID;
+        if (Matches found?) then (yes)
+          :Return results array and empty error;
+        else (no)
+          :Return JSON error: No Records Found;
+        endif
+      endif
+    }
+    partition "Browser" {
+      :Handle response;
+    }
+  endif
+repeat while (Continue using colors?) is (yes) not (no)
+stop
+@enduml

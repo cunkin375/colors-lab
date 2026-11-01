@@ -1,0 +1,89 @@
+@startuml
+title COLORS Lab - Data classes and procedural modules
+skinparam shadowing false
+hide empty members
+
+package "MySQL" {
+  class Users <<table>> {
+    +ID : INT <<PK, auto increment>>
+    +FirstName : VARCHAR(50) = ''
+    +LastName : VARCHAR(50) = ''
+    +Login : VARCHAR(50) <<unique>>
+    +Password : VARCHAR(255)
+    +DateCreated : DATETIME = CURRENT_TIMESTAMP
+  }
+  class Colors <<table>> {
+    +ID : INT <<PK, auto increment>>
+    +UserID : INT <<FK, indexed>>
+    +Name : VARCHAR(50) = ''
+    +DateCreated : DATETIME = CURRENT_TIMESTAMP
+  }
+  class Sessions <<table>> {
+    +Token : CHAR(64) <<PK>>
+    +UserID : INT <<FK, indexed>>
+    +ExpiresAt : DATETIME
+  }
+  Users "1" -- "0..*" Colors : owns\nON DELETE CASCADE
+  Users "1" -- "0..*" Sessions : has\nON DELETE CASCADE
+}
+
+package "Browser" {
+  class "js/code.js" as Client <<script>> {
+    userId : number
+    firstName : string
+    lastName : string
+    token : string
+    doLogin()
+    saveCookie()
+    readCookie()
+    doLogout()
+    addColor()
+    searchColor()
+  }
+}
+
+package "PHP API" {
+  class "api/login.php" as Login <<module>> {
+    loginUser(body : array) : array
+  }
+  class "api/add_color.php" as Add <<module>> {
+    getRequestInfo()
+    sendResultInfoAsJson(obj)
+    returnWithError(err)
+  }
+  class "api/search_colors.php" as Search <<module>> {
+    getRequestInfo()
+    sendResultInfoAsJson(obj)
+    returnWithError(err)
+    returnWithInfo(searchResults)
+  }
+  class "api/common.php" as Common <<module>> {
+    sendHeaders() : void
+    sendResult(payload : array, status : int) : void
+    sendError(message : string, status : int) : void
+    readJsonBody() : array
+    requireField(body : array, name : string) : string
+    escapeLike(value : string) : string
+    issueSessionToken() : array
+    resolveSessionUserId(conn : mysqli, token : string) : int
+  }
+  class "api/db.php" as DB <<module>> {
+    getConnection() : mysqli
+  }
+}
+
+Client  ..> Login : JSON login request
+Client  ..> Add : JSON color + token
+Client  ..> Search : JSON search + token
+Login   ..> Common
+Login   ..> DB
+Add     ..> Common
+Search  ..> Common
+Login   ..> Users : SELECT / password_verify
+Login   ..> Sessions : INSERT
+Common  ..> Sessions : SELECT / check expiration
+Add     ..> Colors : INSERT with session UserID
+Search  ..> Colors : SELECT by session UserID and name
+DB      ..> Users : mysqli connection to Database
+
+

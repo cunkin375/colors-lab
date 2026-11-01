@@ -1,0 +1,31 @@
+@startuml
+title COLORS Lab - Use cases
+left to right direction
+skinparam shadowing false
+
+actor User
+actor "MySQL" as DB
+
+rectangle "COLORS application" {
+  usecase "Log in" as Login
+  usecase "Verify credentials" as Credentials
+  usecase "Create session token" as Session
+  usecase "Add a color" as Add
+  usecase "Search own colors" as Search
+  usecase "Validate session and\nresolve user identity" as Auth
+  usecase "Log out locally" as Logout
+}
+
+User --> Login
+User --> Logout
+Login ..> Credentials
+Login ..> Session
+Login --> DB
+Add ..> Auth
+Search ..> Auth
+DB --> Add
+DB --> Search
+
+
+@enduml
+
