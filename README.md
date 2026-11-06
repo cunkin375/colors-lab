@@ -30,6 +30,23 @@ The COLORS application uses apache2, mysql, and php to host a site that allows u
 └── README.md              # Project documentation
 ```
 
+### JavaScript linting
+
+The app continues to run on Apache, MySQL, and PHP. Node.js is used only
+for development and CI linting; it is not needed on the LAMP server.
+
+With Node.js 24 installed, run:
+
+```sh
+npm ci
+npm run lint
+```
+
+GitHub Actions runs ESLint on pushes, pull requests, and manual workflow
+runs. The configuration uses ESLint's recommended rules and browser globals
+for JavaScript files. Functions called from HTML are marked with an
+`exported` comment so unused-variable checks remain enabled.
+
 ### Database Structure
 The project uses MySQL with database `COP4331` (character set `utf8mb4`, collation `utf8mb4_unicode_ci`).
 

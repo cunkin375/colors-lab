@@ -1,0 +1,13 @@
+{
+  "name": "colors-lab-lint",
+  "private": true,
+  "description": "JavaScript lint tooling for the COLORS LAMP application",
+  "scripts": {
+    "lint": "eslint . --max-warnings=0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.14.0",
+    "globals": "^17.14.0"
+  }
+}
