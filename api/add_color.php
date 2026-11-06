@@ -1,12 +1,13 @@
 <?php
 	require_once __DIR__ . '/common.php';
+	require_once __DIR__ . '/db.php';
 
 	$inData = getRequestInfo();
 
 	$token = isset($inData["token"]) ? $inData["token"] : "";
 	$color = $inData["color"];
 
-	$conn = new mysqli("localhost", "TheBeast", "WeLoveCOP4331", "COP4331");
+	$conn = getConnection();
 	if ($conn->connect_error)
 	{
 		returnWithError( $conn->connect_error );

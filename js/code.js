@@ -1,4 +1,4 @@
-const urlBase = '/LAMPAPI';
+const urlBase = '/api';
 const extension = 'php';
 
 let userId = 0;
@@ -21,7 +21,7 @@ function doLogin()
 	let tmp = {login:login,password:password};
 	let jsonPayload = JSON.stringify( tmp );
 	
-	let url = urlBase + '/Login.' + extension;
+	let url = urlBase + '/login.' + extension;
 
 	let xhr = new XMLHttpRequest();
 	xhr.open("POST", url, true);
@@ -47,7 +47,7 @@ function doLogin()
 
 				saveCookie();
 	
-				window.location.href = "./public/color.html";
+				window.location.href = "./color.html";
 			}
 		};
 		xhr.send(jsonPayload);
@@ -122,7 +122,7 @@ function addColor()
 	let tmp = {color:newColor, userId:userId, token:token};
 	let jsonPayload = JSON.stringify( tmp );
 
-	let url = urlBase + '/AddColor.' + extension;
+	let url = urlBase + '/add_color.' + extension;
 	
 	let xhr = new XMLHttpRequest();
 	xhr.open("POST", url, true);
@@ -155,7 +155,7 @@ function searchColor()
 	let tmp = {search:srch, userId:userId, token:token};
 	let jsonPayload = JSON.stringify( tmp );
 
-	let url = urlBase + '/SearchColors.' + extension;
+	let url = urlBase + '/search_colors.' + extension;
 	
 	let xhr = new XMLHttpRequest();
 	xhr.open("POST", url, true);
