@@ -3,6 +3,9 @@ import globals from "globals";
 
 export default [
     {
+        ignores: ["vendor/**", "coverage/**"],
+    },
+    {
         files: ["**/*.js"],
         ...js.configs.recommended,
         languageOptions: {
@@ -13,5 +16,12 @@ export default [
     {
         files: ["**/*.mjs"],
         ...js.configs.recommended,
+    },
+    {
+        files: ["test/js/**/*.cjs"],
+        ...js.configs.recommended,
+        languageOptions: {
+            globals: globals.node,
+        },
     },
 ];

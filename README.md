@@ -17,16 +17,16 @@ The COLORS application uses apache2, mysql, and php to host a site that allows u
 │   ├── sql/               # Database schema and user setup scripts
 │   ├── color.html         # Color dashboard
 │   └── index.html         # Login page
-├── test/                  # Reserved for tests
+├── test/
+│   ├── js/                # Jest tests for the browser code
+│   └── php/               # PHPUnit tests for PHP API helpers and login responses
 └── README.md              # Project documentation
 ```
 
-Git omits empty directories. After cloning, run `mkdir -p test` if you need the directory locally.
-
 ### JavaScript linting
 
-The app continues to run on Apache, MySQL, and PHP. Node.js is used only
-for development and CI linting; it is not needed on the LAMP server.
+The app runs on Apache, MySQL, and PHP. Node.js is used to lint and test
+the JavaScript during development.
 
 With Node.js 24 installed, run:
 
@@ -39,6 +39,29 @@ GitHub Actions runs ESLint on pushes, pull requests, and manual workflow
 runs. The configuration uses ESLint's recommended rules and browser globals
 for JavaScript files. Functions called from HTML are marked with an
 `exported` comment so unused-variable checks remain enabled.
+
+### Running tests
+
+Run the browser tests with Node.js 24 and Jest.
+
+```sh
+npm ci
+npm test
+npm run test:coverage
+```
+
+Jest prints the coverage summary and writes the HTML report to
+`coverage/lcov-report/index.html`.
+
+Run the PHP API tests with PHP CLI 8.3 or later, Composer, and the
+extensions required by PHPUnit.
+
+```sh
+composer install
+composer test
+```
+
+Neither suite requires MySQL or a running web server.
 
 ### Database Structure
 The project uses MySQL with database `COP4331` (character set `utf8mb4`, collation `utf8mb4_unicode_ci`).

@@ -1,4 +1,5 @@
 /* exported doLogin, readCookie, doLogout, addColor, searchColor */
+/* global module */
 // These functions are called by the HTML pages' inline event handlers.
 const urlBase = './api';
 const extension = 'php';
@@ -190,4 +191,8 @@ function searchColor()
 		document.getElementById("colorSearchResult").innerHTML = err.message;
 	}
 	
+}
+
+if (typeof module !== 'undefined' && module.exports) {
+	module.exports = { doLogin, readCookie, doLogout, addColor, searchColor };
 }

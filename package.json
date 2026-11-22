@@ -1,13 +1,19 @@
 {
   "name": "colors-lab-lint",
   "private": true,
-  "description": "JavaScript lint tooling for the COLORS LAMP application",
+  "description": "JavaScript lint and test tooling for the COLORS LAMP application",
   "scripts": {
-    "lint": "eslint . --max-warnings=0"
+    "lint": "eslint . --max-warnings=0",
+    "test": "jest",
+    "test:coverage": "jest --coverage"
+  },
+  "jest": {
+    "collectCoverageFrom": ["src/js/**/*.js"]
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "eslint": "^10.14.0",
-    "globals": "^17.14.0"
+    "globals": "^17.14.0",
+    "jest": "^30.5.2"
   }
 }
