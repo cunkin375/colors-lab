@@ -1,0 +1,13 @@
+{
+    "name": "colors-lab/colors-lab",
+    "description": "PHP API test tooling for COLORS Lab",
+    "require-dev": {
+        "phpunit/phpunit": "^12.5"
+    },
+    "scripts": {
+        "test": "phpunit"
+    },
+    "config": {
+        "vendor-dir": "/var/lib/colors-lab/composer/vendor"
+    }
+}

@@ -1,3 +1,7 @@
 *.log
+node_modules/
+/coverage/
+/vendor/
+/.phpunit.cache/
 
-api/config.php
+/src/api/config.php
