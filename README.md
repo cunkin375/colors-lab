@@ -4,31 +4,24 @@ The COLORS application uses apache2, mysql, and php to host a site that allows u
 
 ### Setup
 - Requires a LAMP stack droplet hosted on DigitalOcean, or local hosting through Docker or XAMPP
-- If using a droplet, `ssh` into the droplet and clone this repository in `/var/www/html/`
+- Clone the repository on the server and configure Apache's `DocumentRoot` to point to the repository's `src/` directory. Deny HTTP access to `src/sql/` and run those scripts directly against MySQL.
 - A domain can be setup using the droplet's public IP, otherwise, the site is accessible via http://YourDropletIP
 
 ### Codebase Structure
 ```text
 .
-├── api/
-│   ├── add_color.php      # Endpoint to add a new color for the authenticated user
-│   ├── common.php         # Shared utilities (JSON helpers, session handling, validation)
-│   ├── config.php         # Database configuration & environment variable fallback
-│   ├── db.php             # MySQL database connection helper (mysqli)
-│   ├── login.php          # User authentication and session token generation
-│   └── search_colors.php  # Endpoint to search user's saved colors
-├── css/
-│   └── styles.css         # UI styles and typography
-├── js/
-│   └── code.js            # Client-side logic, API calls, and cookie/session management
-├── sql/
-│   ├── create_db_user.sql # SQL script to create a restricted database user
-│   ├── schema.sql         # Database and table definitions (Users, Colors, Sessions)
-│   └── seed.sql           # Seed data for testing and development
-├── color.html             # Application dashboard (search and add colors)
-├── index.html             # Login landing page
+├── src/
+│   ├── api/               # PHP endpoints and shared helpers
+│   ├── css/               # Stylesheets
+│   ├── js/                # Browser JavaScript
+│   ├── sql/               # Database schema and user setup scripts
+│   ├── color.html         # Color dashboard
+│   └── index.html         # Login page
+├── test/                  # Reserved for tests
 └── README.md              # Project documentation
 ```
+
+Git omits empty directories. After cloning, run `mkdir -p test` if you need the directory locally.
 
 ### JavaScript linting
 

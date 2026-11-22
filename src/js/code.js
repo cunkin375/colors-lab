@@ -1,6 +1,6 @@
 /* exported doLogin, readCookie, doLogout, addColor, searchColor */
 // These functions are called by the HTML pages' inline event handlers.
-const urlBase = '/api';
+const urlBase = './api';
 const extension = 'php';
 
 let userId = 0;
