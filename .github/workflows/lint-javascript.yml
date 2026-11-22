@@ -1,4 +1,4 @@
-name: Lint JavaScript
+name: Lint and Test
 
 on:
   push:
@@ -10,17 +10,41 @@ permissions:
 
 jobs:
   lint:
+    name: JavaScript lint and tests
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
       - name: Check out code
         uses: actions/checkout@v4
-      - name: Set up Node.js for linting
+      - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '24'
           cache: npm
-      - name: Install lint dependencies
+      - name: Install JavaScript dependencies
         run: npm ci
       - name: Lint JavaScript
         run: npm run lint
+      - name: Run Jest
+        run: npm test -- --ci
+
+  phpunit:
+    name: PHP API tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      COMPOSER_VENDOR_DIR: ${{ github.workspace }}/vendor
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: dom, mbstring, xml, xmlwriter
+          tools: composer:v2
+          coverage: none
+      - name: Install PHP dependencies
+        run: composer install --no-interaction --prefer-dist --no-progress
+      - name: Run PHPUnit
+        run: composer test
