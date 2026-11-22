@@ -6,5 +6,8 @@
     },
     "scripts": {
         "test": "phpunit"
+    },
+    "config": {
+        "vendor-dir": "/var/lib/colors-lab/composer/vendor"
     }
 }
